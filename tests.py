@@ -1,8 +1,14 @@
 import calculator
 import pytest
 
+# setup empty global instance for Calculator
+calc = None
 
-calc = calculator.Calculator()
+
+# setup for every test new instance of Calculator
+def setup_function():
+    global calc
+    calc = calculator.Calculator()
 
 
 def test_01():
