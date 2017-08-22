@@ -100,7 +100,7 @@ def test_18():
 
 def test_19():
     """Multiple number delimiter"""
-    assert calc.add("//[66][77]\n296625773") == 57
+    assert calc.add("//[69][77]\n296925773") == 57
 
 
 def test_20():
