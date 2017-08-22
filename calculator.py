@@ -5,9 +5,11 @@ class Calculator:
 
     def add(self, numbers: str)-> int:
         if numbers.startswith('//'):
-            delimiter, numbers = self.determine_delimiter(numbers)
+            delimiters, numbers = self.determine_delimiter(numbers)
             numbers = numbers.strip()
-            numbers = numbers.replace('\n', ',').replace(delimiter, ',')
+            for delimiter in delimiters:
+                delimiter = delimiter.strip()
+                numbers = numbers.replace('\n', ',').replace(delimiter, ',')
         else:
             numbers = numbers.strip()
             numbers = numbers.replace('\n', ',')
@@ -15,6 +17,8 @@ class Calculator:
             result = 0
         else:
             digits = numbers.split(',')
+            for i in range(len(digits)):
+                digits[i] = digits[i].replace(" ", "")
             # Handling of exception due to invalid input is responsibility of calling code
             # Strip whitespaces to allow input like "1,,2" (empty string should be 0)
             digits = [int(digit) for digit in digits if digit.strip() and int(digit) <= 1000]
@@ -25,9 +29,15 @@ class Calculator:
         return result
 
     # I put it outside of add function to be clearer.
-    def determine_delimiter(self, numbers: str)->tuple:
+    @staticmethod
+    def determine_delimiter(numbers: str)->tuple:
         regex = re.compile('\[(.*?)\]')
-        delimiter = re.findall(regex, numbers)[0]
+        delimiters = re.findall(regex, numbers)
+        for delimiter in delimiters:
+            delimiter = delimiter.strip()
+            if delimiter == '-':
+                raise ValueError('minus cannot be used as delimiter')
+
         numbers = numbers.split('\n')[1]
-        return delimiter, numbers
+        return delimiters, numbers
 

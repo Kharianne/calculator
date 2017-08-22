@@ -1,6 +1,7 @@
 import calculator
 import pytest
 
+
 calc = calculator.Calculator()
 
 
@@ -36,22 +37,22 @@ def test_06():
 
 
 def test_07():
-    """New line as delimeter"""
+    """New line as delimiter"""
     assert calc.add("1\n2,3") == 6
 
 
 def test_08():
-    """Custom delimeter"""
-    assert calc.determine_delimiter("//[;]\n1;2")[0] == ';'
+    """Custom delimiter"""
+    assert calc.determine_delimiter("//[;]\n1;2")[0][0] == ';'
 
 
 def test_09():
-    """Custom delimeter add"""
+    """Custom delimiter add"""
     assert calc.add("//[;]\n1;2") == 3
 
 
 def test_10():
-    """Two delimeters in row (test empty string input)"""
+    """Two delimiters in row (test empty string input)"""
     assert calc.add("1, ,2") == 3
 
 
@@ -75,3 +76,43 @@ def test_13():
 def test_14():
     """Multiple character delimiter"""
     assert calc.add("//[***]\n1***2***3") == 6
+
+
+def test_15():
+    """Multiple delimiter"""
+    assert calc.add("//[*][%]\n1*2%3") == 6
+
+
+def test_16():
+    """Multiple delimiters with white spaces"""
+    assert calc.add("//[ * ][ % ]\n1 * 2 %3") == 6
+
+
+def test_17():
+    """Multiple delimiters with multiple characters"""
+    assert calc.add("//[ **** ][ %@@ ]\n1****2 %@@ 3") == 6
+
+
+def test_18():
+    """Number delimiter"""
+    assert calc.add("//[66]\n1662663") == 6
+
+
+def test_19():
+    """Multiple number delimiter"""
+    assert calc.add("//[66][77]\n296625773") == 57
+
+
+def test_20():
+    """Negative sign as delimiter"""
+    with pytest.raises(ValueError) as info:
+        calc.add("//[-]\n-1--2-1")
+    assert str(info.value) == "minus cannot be used as delimiter"
+
+
+def test_21():
+    """ValueError test - minus with white space"""
+    with pytest.raises(ValueError) as info:
+        calc.add("1, -    2,- 3")
+    assert str(info.value) == 'negatives not allowed -2, -3'
+
